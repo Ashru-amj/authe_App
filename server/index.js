@@ -7,6 +7,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { fileURLToPath, URL } from 'url';
 import { dirname } from 'path';
+import path from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -29,15 +30,17 @@ mongoose
 
 app.use(express.json());
 
-app.use('/api/user', userRoutes);
+
 app.use('/api/auth', authRoutes);
-
+app.use('/api/user', userRoutes);
 // Use path.resolve to get the absolute path of 'build' directory
-app.use(express.static(new URL('build', import.meta.url).pathname));
+app.use(express.static(path.join(__dirname,"..","client","build")));
 
-app.get('/', function (req, res) {
-  res.sendFile(new URL('build/index.html', import.meta.url).pathname);
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname,"..","client","build","index.html"));
 });
+
+
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
